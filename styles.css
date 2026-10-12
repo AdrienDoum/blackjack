@@ -212,7 +212,7 @@ button { font: inherit; touch-action: manipulation; -webkit-tap-highlight-color:
 }
 .strip th, .grid th { background: #e4e4e4; color: #111; }
 .strip th:first-child, .grid th:first-child { min-width: 62px; }
-.strip thead th:first-child { text-align: left; padding-left: 8px; font-weight: 700; }
+.strip thead th:first-child { text-align: left; padding-left: 8px; font-weight: 700; white-space: nowrap; }
 .strip { margin-top: 10px; }
 
 .c-white { background: #fff; color: #111; }

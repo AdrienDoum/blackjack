@@ -6,6 +6,7 @@ const SUITS = ['♠', '♥', '♦', '♣'];
 const CELL_CLASS = { H: 'white', S: 'yellow', D: 'green', Ds: 'teal', Y: 'green', N: 'white', YN: 'teal', SUR: 'green', '-': 'blank' };
 const CELL_TEXT = { YN: 'Y/N', '-': '' };
 const TABLE_NAME = { hard: 'Hard totals', soft: 'Soft totals', pair: 'Pair splitting', surrender: 'Surrender' };
+const TABLE_SHORT = { hard: 'Hard', soft: 'Soft', pair: 'Pairs', surrender: 'Surr.' };
 const STORAGE_KEY = 'blackjack-trainer-v1';
 
 const state = {
@@ -213,7 +214,7 @@ function rowStrip(step, dealer) {
   const di = DEALER_CARDS.indexOf(dealer);
   const cells = CHART[step.table][step.row].split(' ');
   return `<table class="strip">
-    <thead><tr><th>${TABLE_NAME[step.table]}</th>${DEALER_CARDS.map((d, i) => `<th${i === di ? ' class="hl"' : ''}>${d}</th>`).join('')}</tr></thead>
+    <thead><tr><th>${TABLE_SHORT[step.table]}</th>${DEALER_CARDS.map((d, i) => `<th${i === di ? ' class="hl"' : ''}>${d}</th>`).join('')}</tr></thead>
     <tbody><tr><th>${rowName(step.table, step.row)}</th>${cells.map((c, i) => cellTd(c, i === di ? ' hl' : '')).join('')}</tr></tbody>
   </table>`;
 }

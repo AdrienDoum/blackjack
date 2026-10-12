@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1a14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BJ Trainer">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Blackjack Decision Trainer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Blackjack Trainer</h1>
+    <div class="settings">
+      <label class="chip"><input type="checkbox" id="opt-das"><span>DAS</span></label>
+      <label class="chip"><input type="checkbox" id="opt-surrender"><span>Surrender</span></label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <div class="scoreboard">
+      <div class="stat"><span class="stat-value" id="stat-hands">0</span><span class="stat-name">Hands</span></div>
+      <div class="stat"><span class="stat-value" id="stat-accuracy">–</span><span class="stat-name">Accuracy</span></div>
+      <div class="stat"><span class="stat-value" id="stat-streak">0</span><span class="stat-name">Streak</span></div>
+      <div class="stat"><span class="stat-value" id="stat-best">0</span><span class="stat-name">Best</span></div>
+    </div>
+
+    <section class="felt">
+      <div class="seat">
+        <div class="seat-label">Dealer shows</div>
+        <div class="cards" id="dealer-cards"></div>
+      </div>
+      <div class="seat">
+        <div class="cards" id="player-cards"></div>
+        <div class="seat-label" id="hand-label">What do you do?</div>
+      </div>
+      <div class="feedback" id="feedback" hidden></div>
+      <div class="actions" id="actions"></div>
+    </section>
+
+    <aside class="panel">
+      <h2>By category</h2>
+      <ul class="categories" id="categories"></ul>
+      <h2>Weak spots</h2>
+      <p class="note">Missed hands come back more often until you get them right 3 times in a row.</p>
+      <ul class="weak" id="weak"></ul>
+      <button class="ghost" id="reset">Reset stats</button>
+    </aside>
+  </main>
+
+  <details class="chart-wrap">
+    <summary>Full strategy chart</summary>
+    <div class="chart" id="chart"></div>
+    <p class="credit">Basic strategy chart from <a href="https://www.blackjackapprenticeship.com/blackjack-strategy-charts/" target="_blank" rel="noopener">Blackjack Apprenticeship</a>. Insurance or even money: don't take.</p>
+  </details>
+
+  <footer class="hint">Keys: <kbd>H</kbd> hit · <kbd>S</kbd> stand · <kbd>D</kbd> double · <kbd>P</kbd> split · <kbd>R</kbd> surrender · <kbd>↵</kbd> next hand</footer>
+
+  <script src="strategy.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

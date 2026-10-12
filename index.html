@@ -11,56 +11,64 @@
   <meta name="format-detection" content="telephone=no">
   <link rel="manifest" href="manifest.webmanifest">
   <title>Blackjack Decision Trainer</title>
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
-  <header class="top">
-    <h1>Blackjack Trainer</h1>
-    <div class="settings">
-      <label class="chip"><input type="checkbox" id="opt-das"><span>DAS</span></label>
-    </div>
-  </header>
-
-  <main class="layout">
-    <div class="scoreboard">
-      <div class="stat"><span class="stat-value" id="stat-hands">0</span><span class="stat-name">Hands</span></div>
-      <div class="stat"><span class="stat-value" id="stat-accuracy">–</span><span class="stat-name">Accuracy</span></div>
-      <div class="stat"><span class="stat-value" id="stat-streak">0</span><span class="stat-name">Streak</span></div>
-      <div class="stat"><span class="stat-value" id="stat-best">0</span><span class="stat-name">Best</span></div>
-    </div>
-
-    <section class="felt">
-      <div class="seat">
-        <div class="seat-label">Dealer shows</div>
-        <div class="cards" id="dealer-cards"></div>
+  <div class="app">
+    <header class="top">
+      <nav class="tabs" id="tabs">
+        <button class="tab" data-tab="play" aria-selected="true">Play</button>
+        <button class="tab" data-tab="stats" aria-selected="false">Stats</button>
+        <button class="tab" data-tab="chart" aria-selected="false">Chart</button>
+      </nav>
+      <div class="top-right">
+        <span class="streak" id="top-streak" title="Current streak">0</span>
+        <label class="chip"><input type="checkbox" id="opt-das"><span>DAS</span></label>
       </div>
-      <div class="seat">
-        <div class="cards" id="player-cards"></div>
-        <div class="seat-label" id="hand-label">What do you do?</div>
+    </header>
+
+    <section class="view play" id="view-play">
+      <div class="felt">
+        <div class="seat">
+          <div class="seat-label">Dealer shows</div>
+          <div class="cards" id="dealer-cards"></div>
+        </div>
+        <div class="seat">
+          <div class="cards" id="player-cards"></div>
+          <div class="seat-label" id="hand-label">What do you do?</div>
+        </div>
+        <div class="feedback" id="feedback" hidden></div>
       </div>
-      <div class="feedback" id="feedback" hidden></div>
       <div class="actions" id="actions"></div>
     </section>
 
-    <aside class="panel">
-      <h2>By category</h2>
-      <ul class="categories" id="categories"></ul>
-      <h2>Weak spots</h2>
-      <p class="note">Missed hands come back more often until you get them right 3 times in a row.</p>
-      <ul class="weak" id="weak"></ul>
-      <button class="ghost" id="reset">Reset stats</button>
-    </aside>
-  </main>
+    <section class="view stats" id="view-stats" hidden>
+      <div class="scoreboard">
+        <div class="stat"><span class="stat-value" id="stat-hands">0</span><span class="stat-name">Hands</span></div>
+        <div class="stat"><span class="stat-value" id="stat-accuracy">–</span><span class="stat-name">Accuracy</span></div>
+        <div class="stat"><span class="stat-value" id="stat-streak">0</span><span class="stat-name">Streak</span></div>
+        <div class="stat"><span class="stat-value" id="stat-best">0</span><span class="stat-name">Best</span></div>
+      </div>
+      <div class="panel">
+        <h2>By category</h2>
+        <ul class="categories" id="categories"></ul>
+        <h2>Weak spots</h2>
+        <p class="note">Missed hands come back more often until you get them right 3 times in a row.</p>
+        <ul class="weak" id="weak"></ul>
+        <button class="ghost" id="reset">Reset stats</button>
+      </div>
+      <p class="credit">Keys: <kbd>H</kbd> hit · <kbd>S</kbd> stand · <kbd>D</kbd> double · <kbd>P</kbd> split · <kbd>↵</kbd> next hand</p>
+    </section>
 
-  <details class="chart-wrap">
-    <summary>Full strategy chart</summary>
-    <div class="chart" id="chart"></div>
-    <p class="credit">Basic strategy chart from <a href="https://www.blackjackapprenticeship.com/blackjack-strategy-charts/" target="_blank" rel="noopener">Blackjack Apprenticeship</a>. Surrender and insurance are not trained here.</p>
-  </details>
+    <section class="view stats" id="view-chart" hidden>
+      <div class="panel">
+        <div class="chart" id="chart"></div>
+        <p class="credit">Basic strategy from <a href="https://www.blackjackapprenticeship.com/blackjack-strategy-charts/" target="_blank" rel="noopener">Blackjack Apprenticeship</a>. Surrender and insurance are not trained here.</p>
+      </div>
+    </section>
+  </div>
 
-  <footer class="hint">Keys: <kbd>H</kbd> hit · <kbd>S</kbd> stand · <kbd>D</kbd> double · <kbd>P</kbd> split · <kbd>↵</kbd> next hand</footer>
-
-  <script src="strategy.js?v=3"></script>
-  <script src="app.js?v=3"></script>
+  <script src="strategy.js?v=4"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

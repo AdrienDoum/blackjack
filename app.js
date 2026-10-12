@@ -17,7 +17,7 @@ const state = {
 };
 
 const el = {};
-for (const id of ['dealer-cards', 'player-cards', 'hand-label', 'actions', 'feedback', 'stat-hands', 'stat-accuracy', 'stat-streak', 'stat-best', 'categories', 'weak', 'reset', 'chart', 'opt-das']) {
+for (const id of ['dealer-cards', 'player-cards', 'hand-label', 'actions', 'feedback', 'stat-hands', 'stat-accuracy', 'stat-streak', 'stat-best', 'categories', 'weak', 'reset', 'chart', 'opt-das', 'tabs', 'top-streak']) {
   el[id.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = document.getElementById(id);
 }
 
@@ -128,10 +128,7 @@ function deal() {
   el.dealerCards.innerHTML = cardHtml(state.hand.dealerCard) + '<div class="card back"></div>';
   el.playerCards.innerHTML = state.hand.cards.map(cardHtml).join('');
   render();
-  if (isPhone()) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-const isPhone = () => window.matchMedia('(max-width: 760px)').matches;
 
 function available(action) {
   return action !== 'split' || state.hand.row.table === 'pair';
@@ -166,7 +163,6 @@ function answer(action) {
   state.result = { action, decision, correct };
   save();
   render();
-  if (isPhone()) el.feedback.scrollIntoView({ block: 'end', behavior: 'smooth' });
 }
 
 function cardHtml(card) {
@@ -260,6 +256,8 @@ function renderStats() {
   el.statHands.textContent = s.hands;
   el.statAccuracy.textContent = s.hands ? `${Math.round((100 * s.correct) / s.hands)}%` : '–';
   el.statStreak.textContent = s.streak;
+  el.topStreak.textContent = s.streak;
+  el.topStreak.classList.toggle('hot', s.streak >= 5);
   el.statBest.textContent = s.best;
 
   el.categories.innerHTML = Object.keys(TABLE_NAME).map((k) => {
@@ -288,6 +286,7 @@ function render() {
     return `<button class="action" ${attrs.join(' ')}><span>${ACTION_LABEL[a]}</span><kbd>${ACTION_KEY[a]}</kbd></button>`;
   }).join('');
   el.actions.classList.toggle('answered', !!result);
+  el.feedback.closest('.felt').classList.toggle('answered', !!result);
   if (result) {
     const verdict = result.correct ? `Correct: ${ACTION_LABEL[result.action]}` : `Wrong: the book says ${ACTION_LABEL[result.decision.action]}`;
     el.actions.insertAdjacentHTML('beforeend', `<div class="bar-verdict${result.correct ? '' : ' bad'}">${verdict}</div><button class="next" data-action="next">Next hand <kbd>↵</kbd></button>`);
@@ -303,6 +302,13 @@ el.actions.addEventListener('click', (e) => {
   button.blur();
   if (button.dataset.action === 'next') deal();
   else answer(button.dataset.action);
+});
+
+el.tabs.addEventListener('click', (e) => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  for (const t of el.tabs.querySelectorAll('.tab')) t.setAttribute('aria-selected', String(t === tab));
+  for (const view of document.querySelectorAll('.view')) view.hidden = view.id !== `view-${tab.dataset.tab}`;
 });
 
 let resetArmed = null;

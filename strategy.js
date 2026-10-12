@@ -1,6 +1,6 @@
 // Basic strategy (multi-deck) from blackjackapprenticeship.com.
 // Columns follow DEALER_CARDS. H hit, S stand, D double else hit, Ds double else stand,
-// Y split, N don't split, YN split only if DAS offered, SUR surrender.
+// Y split, N don't split, YN split only if DAS offered.
 const DEALER_CARDS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A'];
 
 const CHART = {
@@ -38,18 +38,12 @@ const CHART = {
     3: 'YN YN Y Y Y Y N N N N',
     2: 'YN YN Y Y Y Y N N N N',
   },
-  surrender: {
-    16: '- - - - - - - SUR SUR SUR',
-    15: '- - - - - - - - SUR -',
-    14: '- - - - - - - - - -',
-  },
 };
 
 const ROW_ORDER = {
   hard: [17, 16, 15, 14, 13, 12, 11, 10, 9, 8],
   soft: [9, 8, 7, 6, 5, 4, 3, 2],
   pair: ['A', 10, 9, 8, 7, 6, 5, 4, 3, 2],
-  surrender: [16, 15, 14],
 };
 
 const LEGEND = {
@@ -60,7 +54,6 @@ const LEGEND = {
   Y: 'Split the pair',
   N: "Don't split the pair",
   YN: 'Split only if DAS is offered',
-  SUR: 'Surrender',
 };
 
 function cardValue(rank) {
@@ -105,11 +98,6 @@ function decide(ranks, dealer, opts) {
     steps.push({ table: 'soft', row: info.softCard, cell });
     const action = cell === 'H' ? 'hit' : cell === 'S' ? 'stand' : 'double';
     return { action, steps, info };
-  }
-
-  if (opts.surrender && CHART.surrender[info.total] && cellOf('surrender', info.total, dealer) === 'SUR') {
-    steps.push({ table: 'surrender', row: info.total, cell: 'SUR' });
-    return { action: 'surrender', steps, info };
   }
 
   const row = Math.min(17, Math.max(8, info.total));

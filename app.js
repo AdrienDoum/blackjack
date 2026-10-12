@@ -1,23 +1,23 @@
-const ACTIONS = ['hit', 'stand', 'double', 'split', 'surrender'];
-const ACTION_LABEL = { hit: 'Hit', stand: 'Stand', double: 'Double', split: 'Split', surrender: 'Surrender' };
-const ACTION_KEY = { hit: 'H', stand: 'S', double: 'D', split: 'P', surrender: 'R' };
-const KEY_ACTION = { h: 'hit', s: 'stand', d: 'double', p: 'split', r: 'surrender' };
+const ACTIONS = ['hit', 'stand', 'double', 'split'];
+const ACTION_LABEL = { hit: 'Hit', stand: 'Stand', double: 'Double', split: 'Split' };
+const ACTION_KEY = { hit: 'H', stand: 'S', double: 'D', split: 'P' };
+const KEY_ACTION = { h: 'hit', s: 'stand', d: 'double', p: 'split' };
 const SUITS = ['♠', '♥', '♦', '♣'];
-const CELL_CLASS = { H: 'white', S: 'yellow', D: 'green', Ds: 'teal', Y: 'green', N: 'white', YN: 'teal', SUR: 'green', '-': 'blank' };
-const CELL_TEXT = { YN: 'Y/N', '-': '' };
-const TABLE_NAME = { hard: 'Hard totals', soft: 'Soft totals', pair: 'Pair splitting', surrender: 'Surrender' };
-const TABLE_SHORT = { hard: 'Hard', soft: 'Soft', pair: 'Pairs', surrender: 'Surr.' };
-const STORAGE_KEY = 'blackjack-trainer-v1';
+const CELL_CLASS = { H: 'white', S: 'yellow', D: 'green', Ds: 'teal', Y: 'green', N: 'white', YN: 'teal' };
+const CELL_TEXT = { YN: 'Y/N' };
+const TABLE_NAME = { hard: 'Hard totals', soft: 'Soft totals', pair: 'Pair splitting' };
+const TABLE_SHORT = { hard: 'Hard', soft: 'Soft', pair: 'Pairs' };
+const STORAGE_KEY = 'blackjack-trainer-v2';
 
 const state = {
-  settings: { das: true, surrender: true },
+  settings: { das: true },
   stats: freshStats(),
   hand: null,
   result: null,
 };
 
 const el = {};
-for (const id of ['dealer-cards', 'player-cards', 'hand-label', 'actions', 'feedback', 'stat-hands', 'stat-accuracy', 'stat-streak', 'stat-best', 'categories', 'weak', 'reset', 'chart', 'opt-das', 'opt-surrender']) {
+for (const id of ['dealer-cards', 'player-cards', 'hand-label', 'actions', 'feedback', 'stat-hands', 'stat-accuracy', 'stat-streak', 'stat-best', 'categories', 'weak', 'reset', 'chart', 'opt-das']) {
   el[id.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = document.getElementById(id);
 }
 
@@ -27,7 +27,7 @@ function freshStats() {
     correct: 0,
     streak: 0,
     best: 0,
-    tables: { hard: { n: 0, c: 0 }, soft: { n: 0, c: 0 }, pair: { n: 0, c: 0 }, surrender: { n: 0, c: 0 } },
+    tables: { hard: { n: 0, c: 0 }, soft: { n: 0, c: 0 }, pair: { n: 0, c: 0 } },
     situations: {},
   };
 }
@@ -134,9 +134,7 @@ function deal() {
 const isPhone = () => window.matchMedia('(max-width: 760px)').matches;
 
 function available(action) {
-  if (action === 'split') return state.hand.row.table === 'pair';
-  if (action === 'surrender') return state.settings.surrender;
-  return true;
+  return action !== 'split' || state.hand.row.table === 'pair';
 }
 
 function answer(action) {
@@ -144,7 +142,7 @@ function answer(action) {
   const { hand, stats } = state;
   const decision = decide(hand.cards.map((c) => c.rank), hand.dealer, state.settings);
   const correct = action === decision.action;
-  const category = decision.action === 'surrender' ? 'surrender' : decision.steps[0].table;
+  const category = decision.steps[0].table;
 
   stats.hands++;
   if (correct) {
@@ -199,7 +197,6 @@ function explainStep(step, decision, dealer) {
     return `Pair of ${pairName(info.pairOf)} ${vs}: ${code} ${LEGEND[step.cell]}.${tail}`;
   }
   if (step.table === 'soft') return `Soft ${info.total} (A,${step.row}) ${vs}: ${code} ${LEGEND[step.cell]}.`;
-  if (step.table === 'surrender') return `Hard ${info.total} ${vs}: ${code} ${LEGEND[step.cell]}.`;
   let tail = '';
   if (info.total >= 17) tail = ' 17 and up always stands.';
   if (info.total <= 8) tail = ' 8 and under always hits.';
@@ -327,7 +324,7 @@ el.reset.addEventListener('click', () => {
 });
 
 load();
-for (const [input, key] of [[el.optDas, 'das'], [el.optSurrender, 'surrender']]) {
+for (const [input, key] of [[el.optDas, 'das']]) {
   input.checked = state.settings[key];
   input.addEventListener('change', () => {
     state.settings[key] = input.checked;
